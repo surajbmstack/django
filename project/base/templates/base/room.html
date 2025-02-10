@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    {% include 'navbar.html'%}
+   <div style="display: grid;grid-template-columns: 3fr  1fr ;">
+   {% block content %}
+   <div style="display: flex;flex-direction: column;">
+      
+       <h1>{{room.name}}</h1>
+       <h1>{{room.description}}</h1>
+       <div> 
+        <h3>Conversations</h3>
+       
+        <hr>
+       
+       {%if request.user == message.user%}
+       <a href="{%url 'delete-message' message.id %}">Delete</a>
+         {% endif %}
+         {%for message in room_messages%}
+       <span>@{{message.user}}: </span>
+       <span>{{message.created|timesince}}</span>
+       <p>{{message.body}}</p>
+       
+       
+       {% endfor %}
+         </div>
+         
+   {% if request.user.is_authenticated %}
+   <div>
+       <form method="POSt">
+           {%csrf_token%}
+           <input type="text" name="body" placeholder="Type your message">
+       </form>
+   </div>
+   
+   {%endif%}
+   </div>
+ 
+
+<div >
+    <h3>Participants</h3>
+    <hr>
+    {%for participant in participants%}
+    <p>{{participant.username}}</p>
+    {%endfor%}
+</div>
+</div>
+   {%endblock content%}
+    
+</body>
+</html>
